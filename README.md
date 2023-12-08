@@ -20,9 +20,9 @@ pragma solidity ^0.8.17;
 import "./media-protocol/contracts/interfaces/IMarketplace.sol";
 
 contract SimpleInitializeMarketplace {
-    Marketplace marketplace;
+    IMarketplace marketplace;
     constructor(address _marketplaceAddress) {
-        marketplace = Marketplace(_marketplaceAddress);
+        marketplace = IMarketplace(_marketplaceAddress);
     }
 
     function initializeMarketplace() external returns (uint marketplaceId) {
