@@ -2,8 +2,29 @@
 pragma solidity >=0.8.17;
 
 interface IMarketplaceViewer {
-    function getPaginatedOffers( uint256 marketplaceId,uint256 start,uint256 pageSize ) external view returns (Marketplace.Offer[] memory results, uint256 lastAccessedId, uint256 autoIncrement, uint256 totalItems) ;
-    function getPaginatedDeals( uint256 marketplaceId,address _address,bool isProvider,uint256 start,uint256 pageSize ) external view returns (Marketplace.Deal[] memory results, uint256 totalItems) ;
+    function getPaginatedOffers(
+        uint256 marketplaceId,
+        uint256 start,
+        uint256 pageSize
+    )
+        external
+        view
+        returns (
+            Marketplace.Offer[] memory results,
+            uint256 lastAccessedId,
+            uint256 autoIncrement,
+            uint256 totalItems
+        );
+    function getPaginatedDeals(
+        uint256 marketplaceId,
+        address _address,
+        bool isProvider,
+        uint256 start,
+        uint256 pageSize
+    )
+        external
+        view
+        returns (Marketplace.Deal[] memory results, uint256 totalItems);
 }
 
 interface Marketplace {
