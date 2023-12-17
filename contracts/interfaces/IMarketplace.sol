@@ -9,6 +9,7 @@ interface IMarketplace {
     );
     event AddressAuthorized(address indexed _addr);
     event AddressDeauthorized(address indexed _addr);
+    event BillingStartExtended(uint256 marketplaceId, uint256 dealId);
     event DealAccepted(uint256 indexed _marketplaceId, uint256 indexed _dealId);
     event DealCancelled(
         uint256 indexed _marketplaceId,
@@ -94,15 +95,15 @@ interface IMarketplace {
     ) external returns (bool updated);
     function increaseProviderStake(
         uint256 marketplaceId,
-        uint256 amountAdd0,
-        uint256 amountAdd1,
+        uint256 amountAddWeth,
+        uint256 amountAddMedia,
         uint256 slippage
     ) external returns (uint128 liquidity, uint256 amount0, uint256 amount1);
     function decreaseProviderStake(
         uint256 marketplaceId,
         uint128 newLiquidity,
-        uint256 amount0Min,
-        uint256 amount1Min
+        uint256 amountAddWeth,
+        uint256 amountAddMedia
     ) external returns (bool updated);
     function createOffer(
         uint256 marketplaceId,
@@ -169,6 +170,11 @@ interface IMarketplace {
         uint256 dealId
     ) external returns (bool);
     function collectAllDeals(uint256 marketplaceId) external returns (bool);
+    function extendBillingStart(
+        uint256 marketplaceId,
+        uint256 dealId,
+        uint256 extension
+    ) external returns (bool);
     function authorizeProxy(address _addr) external returns (bool);
     function deAuthorizeProxy(address _addr) external returns (bool);
     function setToken(address _tokenAddress) external returns (bool);

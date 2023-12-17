@@ -24,6 +24,10 @@ interface IMarketplaceHelper {
         bytes memory
     ) external pure returns (bytes4);
     function recoverTokens(address _token) external returns (bool);
+    function sortAddresses(
+        address a,
+        address b
+    ) external pure returns (address, address);
     function addLiquidityAndRegisterWithETH(
         uint256 marketplaceId,
         string memory label,

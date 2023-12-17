@@ -29,15 +29,15 @@ interface IStaking {
     function unstake(uint256 marketplaceId) external returns (uint256 nftId);
     function increaseLiquidity(
         uint256 marketplaceId,
-        uint256 amountAdd0,
-        uint256 amountAdd1,
+        uint256 amountWETH,
+        uint256 amountMediaToken,
         uint256 slippage
     ) external returns (uint128 liquidity, uint256 amount0, uint256 amount1);
     function decreaseLiquidity(
         uint256 marketplaceId,
         uint128 newLiquidity,
-        uint256 amount0Min,
-        uint256 amount1Min
+        uint256 amountWETH,
+        uint256 amountMediaToken
     ) external returns (uint256 amount0, uint256 amount1);
     function getNftId(
         uint256 marketplaceId,
