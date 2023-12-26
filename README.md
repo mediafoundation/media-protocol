@@ -38,9 +38,9 @@ contract SimpleInitializeMarketplace {
 Use your preferred tools to compile and test your contracts that interact with these interfaces.
 
 ### Contract Addresses
-As we are still in the process of deploying the contracts, their addresses are not yet available.
 
-A set of testnet addresses, including those for Goerli, Base Goerli, and LaTesnet, will be published here soon. We encourage you to watch this repository for updates.
+⚠️ **Important Notice**: The contract addresses listed are currently from testnets and may be subject to change. Always refer to the [official Media Protocol documentation](https://www.mediaprotocol.net/smart-contracts/deployment-addresses) for the most up-to-date and valid contract addresses before any interactions.
+
 
 ### Future Updates
 The full implementation of the smart contracts will be published in this repository once the audit is complete. Stay tuned for updates.
