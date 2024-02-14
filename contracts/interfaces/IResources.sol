@@ -12,7 +12,6 @@ interface IResources {
     event RemovedResource(uint256 _id);
     event UpdatedOwnerKeys(address _addr);
     event UpdatedResource(uint256 _id);
-
     function delegationCount(uint256, address) external view returns (uint256);
     function marketplace() external view returns (address);
     function owner() external view returns (address);

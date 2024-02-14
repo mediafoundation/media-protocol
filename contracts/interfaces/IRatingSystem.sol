@@ -6,7 +6,6 @@ interface IRatingSystem {
         address indexed previousOwner,
         address indexed newOwner
     );
-
     function clientRatings(
         uint256,
         address,

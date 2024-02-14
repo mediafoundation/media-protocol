@@ -3,54 +3,70 @@ pragma solidity >=0.8.17;
 
 interface IMarketplace {
     event AddedBalance(
-        uint256 indexed _marketplaceId,
-        uint256 indexed _blockedBalance,
-        uint256 indexed _dealId
+        uint256 _marketplaceId,
+        uint256 _dealId,
+        uint256 _amount
     );
-    event AddressAuthorized(address indexed _addr);
-    event AddressDeauthorized(address indexed _addr);
-    event BillingStartExtended(uint256 marketplaceId, uint256 dealId);
-    event DealAccepted(uint256 indexed _marketplaceId, uint256 indexed _dealId);
+    event AddressAuthorized(address _addr);
+    event AddressDeauthorized(address _addr);
+    event BillingStartExtended(
+        uint256 marketplaceId,
+        uint256 dealId,
+        uint256 _extension
+    );
+    event DealAccepted(
+        uint256 _marketplaceId,
+        uint256 _dealId,
+        uint256 _amount
+    );
     event DealCancelled(
-        uint256 indexed _marketplaceId,
-        uint256 indexed _dealId
+        uint256 _marketplaceId,
+        uint256 _dealId,
+        uint256 _paymentToProvider,
+        uint256 _totalPayment,
+        uint256 _clientRefund
     );
     event DealCollected(
-        uint256 indexed _marketplaceId,
-        uint256 indexed _dealId
+        uint256 _marketplaceId,
+        uint256 _dealId,
+        uint256 _paymentToProvider,
+        uint256 _totalPayment
     );
-    event DealCreated(uint256 indexed _marketplaceId, uint256 indexed _dealId);
-    event DealRejected(uint256 indexed _marketplaceId, uint256 indexed _dealId);
-    event MarketplaceInitialized(uint256 indexed _marketplaceId);
-    event OfferCreated(
-        uint256 indexed _marketplaceId,
-        uint256 indexed _offerId
+    event DealCreated(
+        uint256 _marketplaceId,
+        uint256 _dealId,
+        uint256 _amount,
+        bool _autoAccept
     );
-    event OfferDeleted(
-        uint256 indexed _marketplaceId,
-        uint256 indexed _offerId
+    event DealRejected(
+        uint256 _marketplaceId,
+        uint256 _dealId,
+        uint256 _clientRefund
     );
-    event OfferUpdated(
-        uint256 indexed _marketplaceId,
-        uint256 indexed _offerId
-    );
+    event MarketplaceInitialized(uint256 _marketplaceId);
+    event OfferCreated(uint256 _marketplaceId, uint256 _offerId);
+    event OfferDeleted(uint256 _marketplaceId, uint256 _offerId);
+    event OfferUpdated(uint256 _marketplaceId, uint256 _offerId);
     event OwnershipTransferred(
         address indexed previousOwner,
         address indexed newOwner
     );
-    event ProviderRegistered(
-        uint256 indexed _marketplaceId,
-        address indexed _provider
+    event ProviderRegistered(uint256 _marketplaceId, address _provider);
+    event ProviderStakeDecreased(
+        uint256 _marketplaceId,
+        address _provider,
+        uint256 _amount0,
+        uint256 _amount1
     );
-    event ProviderUnregistered(
-        uint256 indexed _marketplaceId,
-        address indexed _provider
+    event ProviderStakeIncreased(
+        uint256 _marketplaceId,
+        address _provider,
+        uint256 _liquidity,
+        uint256 _amount0,
+        uint256 _amount1
     );
-    event ProviderUpdated(
-        uint256 indexed _marketplaceId,
-        address indexed _provider
-    );
-
+    event ProviderUnregistered(uint256 _marketplaceId, address _provider);
+    event ProviderUpdated(uint256 _marketplaceId, address _provider);
     function REQUIRED_STAKE(uint256) external view returns (uint256);
     function authorizedAddresses(uint256) external view returns (address);
     function authorizedProxies(address) external view returns (bool);
@@ -81,7 +97,7 @@ interface IMarketplace {
     ) external returns (uint256 marketplaceId);
     function registerProvider(
         uint256 marketplaceId,
-        string memory label,
+        string memory metadata,
         string memory publicKey,
         uint256 nftId
     ) external returns (bool);
@@ -90,21 +106,21 @@ interface IMarketplace {
     ) external returns (uint256 nftId);
     function updateProvider(
         uint256 marketplaceId,
-        string memory label,
+        string memory metadata,
         string memory publicKey
     ) external returns (bool updated);
     function increaseProviderStake(
         uint256 marketplaceId,
-        uint256 amountAddWeth,
-        uint256 amountAddMedia,
+        uint256 amountWeth,
+        uint256 amountMedia,
         uint256 slippage
     ) external returns (uint128 liquidity, uint256 amount0, uint256 amount1);
     function decreaseProviderStake(
         uint256 marketplaceId,
         uint128 newLiquidity,
-        uint256 amountAddWeth,
-        uint256 amountAddMedia
-    ) external returns (bool updated);
+        uint256 amountWeth,
+        uint256 amountMedia
+    ) external returns (bool);
     function createOffer(
         uint256 marketplaceId,
         uint256 maximumDeals,
@@ -253,7 +269,7 @@ interface IMarketplace {
 
 interface Marketplace {
     struct Provider {
-        string label;
+        string metadata;
         string publicKey;
     }
 

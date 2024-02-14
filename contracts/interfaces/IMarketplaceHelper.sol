@@ -6,7 +6,6 @@ interface IMarketplaceHelper {
         address indexed previousOwner,
         address indexed newOwner
     );
-
     function marketplace() external view returns (address);
     function mediaToken() external view returns (address);
     function owner() external view returns (address);
@@ -30,7 +29,7 @@ interface IMarketplaceHelper {
     ) external pure returns (address, address);
     function addLiquidityAndRegisterWithETH(
         uint256 marketplaceId,
-        string memory label,
+        string memory metadata,
         string memory publicKey,
         uint256 minMediaAmountOut,
         bytes memory path,
@@ -48,7 +47,7 @@ interface IMarketplaceHelper {
         uint256 marketplaceId,
         address inputToken,
         uint256 inputAmount,
-        string memory label,
+        string memory metadata,
         string memory publicKey,
         uint256 minWethAmountOut,
         uint256 minMediaAmountOut,
@@ -86,11 +85,20 @@ interface IMarketplaceHelper {
         uint256 marketplaceId,
         uint256 amount0Min,
         uint256 amount1Min
-    ) external returns (uint256 collectedToken0, uint256 collectedToken1);
+    )
+        external
+        returns (
+            uint256 collectedToken0,
+            uint256 collectedToken1,
+            address token0,
+            address token1
+        );
     function unregisterRemoveLiquidityAndSwap(
         uint256 marketplaceId,
+        uint256 minOutputMedia,
         uint256 minMediaAmount,
-        uint256 minWethAmount
+        uint256 minWethAmount,
+        uint24 poolFee
     ) external;
     function swapAndCreateDeal(
         uint256 marketplaceId,

@@ -6,7 +6,6 @@ interface IDisputes {
         address indexed previousOwner,
         address indexed newOwner
     );
-
     function MAX_DISPUTE_DURATION() external view returns (uint256);
     function comments(
         uint256,

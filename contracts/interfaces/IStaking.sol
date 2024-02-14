@@ -6,7 +6,6 @@ interface IStaking {
         address indexed previousOwner,
         address indexed newOwner
     );
-
     function WETH9() external view returns (address);
     function factory() external view returns (address);
     function marketplace() external view returns (address);
@@ -25,7 +24,10 @@ interface IStaking {
     ) external returns (bool);
     function getMarketplace() external view returns (address addr);
     function recoverTokens(address _token) external returns (bool);
-    function stake(uint256 marketplaceId, uint256 nftId) external;
+    function stake(
+        uint256 marketplaceId,
+        uint256 nftId
+    ) external returns (bool);
     function unstake(uint256 marketplaceId) external returns (uint256 nftId);
     function increaseLiquidity(
         uint256 marketplaceId,
@@ -38,7 +40,14 @@ interface IStaking {
         uint128 newLiquidity,
         uint256 amountWETH,
         uint256 amountMediaToken
-    ) external returns (uint256 amount0, uint256 amount1);
+    )
+        external
+        returns (
+            uint256 amount0,
+            uint256 amount1,
+            address token0,
+            address token1
+        );
     function getNftId(
         uint256 marketplaceId,
         address provider
