@@ -14,6 +14,7 @@ interface IMarketplace {
         uint256 dealId,
         uint256 _extension
     );
+    event ClientUpdated(uint256 _marketplaceId, address _client);
     event DealAccepted(
         uint256 _marketplaceId,
         uint256 _dealId,
@@ -95,6 +96,22 @@ interface IMarketplace {
         address _marketFeeTo,
         uint256 _marketFeeRate
     ) external returns (uint256 marketplaceId);
+    function setRequiredStake(
+        uint256 marketplaceId,
+        uint256 stake
+    ) external returns (bool);
+    function transferMarketplaceOwnership(
+        uint256 marketplaceId,
+        address newOwner
+    ) external returns (bool);
+    function setMarketFeeRate(
+        uint256 marketplaceId,
+        uint256 feeRate
+    ) external returns (bool);
+    function setMarketFeeTo(
+        uint256 marketplaceId,
+        address feeTo
+    ) external returns (bool);
     function registerProvider(
         uint256 marketplaceId,
         string memory metadata,
@@ -146,6 +163,18 @@ interface IMarketplace {
         uint256 marketplaceId,
         uint256 offerId
     ) external returns (bool);
+    function acceptDeal(
+        uint256 marketplaceId,
+        uint256 dealId
+    ) external returns (bool);
+    function rejectDeal(
+        uint256 marketplaceId,
+        uint256 dealId
+    ) external returns (bool);
+    function updateClient(
+        uint256 marketplaceId,
+        string memory metadata
+    ) external returns (bool);
     function createDeal(
         uint256 marketplaceId,
         uint256 resourceId,
@@ -160,14 +189,6 @@ interface IMarketplace {
         uint256[] memory blockedBalance,
         string[] memory _sharedKeyCopies
     ) external returns (uint256[] memory dealsId, uint256 totalDeposit);
-    function acceptDeal(
-        uint256 marketplaceId,
-        uint256 dealId
-    ) external returns (bool);
-    function rejectDeal(
-        uint256 marketplaceId,
-        uint256 dealId
-    ) external returns (bool);
     function cancelDeal(
         uint256 marketplaceId,
         uint256 dealId
@@ -196,36 +217,11 @@ interface IMarketplace {
     function setToken(address _tokenAddress) external returns (bool);
     function setProtocolFeeTo(address feeTo) external returns (bool);
     function setProtocolFeeRate(uint256 feeRate) external returns (bool);
-    function setRequiredStake(
-        uint256 marketplaceId,
-        uint256 stake
-    ) external returns (bool);
-    function transferMarketplaceOwnership(
-        uint256 marketplaceId,
-        address newOwner
-    ) external returns (bool);
-    function setMarketFeeRate(
-        uint256 marketplaceId,
-        uint256 feeRate
-    ) external returns (bool);
-    function setMarketFeeTo(
-        uint256 marketplaceId,
-        address feeTo
-    ) external returns (bool);
     function recoverTokens(address _token) external returns (bool);
     function hasActiveDeals(
         uint256 marketplaceId,
         uint256 offerId
     ) external view returns (bool);
-    function getAuthorizedAddresses() external view returns (address[] memory);
-    function getProtocolFeeRate() external view returns (uint256);
-    function getProtocolFeeTo() external view returns (address);
-    function getMarketFeeRate(
-        uint256 marketplaceId
-    ) external view returns (uint256);
-    function getMarketFeeTo(
-        uint256 marketplaceId
-    ) external view returns (address);
     function isRegisteredProvider(
         uint256 marketplaceId,
         address provider
@@ -234,26 +230,10 @@ interface IMarketplace {
         uint256 marketplaceId,
         address provider
     ) external view returns (Marketplace.Provider memory);
-    function getStakeAmount(
-        uint256 marketplaceId,
-        address provider
-    ) external view returns (uint256);
-    function getProviderOffers(
-        uint256 marketplaceId,
-        address provider
-    ) external view returns (uint256[] memory);
-    function getProviderDeals(
-        uint256 marketplaceId,
-        address provider
-    ) external view returns (uint256[] memory);
-    function getClientDeals(
+    function getClient(
         uint256 marketplaceId,
         address client
-    ) external view returns (uint256[] memory);
-    function getOfferDealsIds(
-        uint256 marketplaceId,
-        uint256 offerId
-    ) external view returns (uint256[] memory);
+    ) external view returns (string memory);
     function getOffer(
         uint256 marketplaceId,
         uint256 offerId
@@ -262,8 +242,25 @@ interface IMarketplace {
         uint256 marketplaceId,
         uint256 dealId
     ) external view returns (Marketplace.Deal memory);
-    function getRequiredStake(
-        uint256 marketplaceId
+    function getProviderOffers(
+        uint256 marketplaceId,
+        address provider
+    ) external view returns (uint256[] memory);
+    function getOfferDealsIds(
+        uint256 marketplaceId,
+        uint256 offerId
+    ) external view returns (uint256[] memory);
+    function getClientDeals(
+        uint256 marketplaceId,
+        address client
+    ) external view returns (uint256[] memory);
+    function getProviderDeals(
+        uint256 marketplaceId,
+        address provider
+    ) external view returns (uint256[] memory);
+    function getStakeAmount(
+        uint256 marketplaceId,
+        address provider
     ) external view returns (uint256);
 }
 

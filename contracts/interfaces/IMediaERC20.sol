@@ -29,6 +29,8 @@ interface IMediaERC20 {
     ) external view returns (uint256);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
+    function burn(uint256 amount) external;
+    function burnFrom(address account, uint256 amount) external;
     function checkpoints(
         address account,
         uint32 pos

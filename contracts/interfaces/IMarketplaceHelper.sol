@@ -6,6 +6,7 @@ interface IMarketplaceHelper {
         address indexed previousOwner,
         address indexed newOwner
     );
+    function feeAmountTickSpacing(uint24) external view returns (int24);
     function marketplace() external view returns (address);
     function mediaToken() external view returns (address);
     function owner() external view returns (address);
@@ -23,6 +24,9 @@ interface IMarketplaceHelper {
         bytes memory
     ) external pure returns (bytes4);
     function recoverTokens(address _token) external returns (bool);
+    function tickSpacingToMaxTick(
+        int24 tickSpacing
+    ) external pure returns (int24 maxTick);
     function sortAddresses(
         address a,
         address b
@@ -33,7 +37,8 @@ interface IMarketplaceHelper {
         string memory publicKey,
         uint256 minMediaAmountOut,
         bytes memory path,
-        uint256 slippage
+        uint256 slippage,
+        uint24 poolFee
     )
         external
         payable
@@ -49,10 +54,10 @@ interface IMarketplaceHelper {
         uint256 inputAmount,
         string memory metadata,
         string memory publicKey,
-        uint256 minWethAmountOut,
-        uint256 minMediaAmountOut,
+        uint256[] memory minOut,
         bytes[] memory paths,
-        uint256 slippage
+        uint256 slippage,
+        uint24 poolFee
     )
         external
         returns (

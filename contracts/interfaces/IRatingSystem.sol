@@ -19,6 +19,8 @@ interface IRatingSystem {
     function recoverNative() external returns (bool);
     function renounceOwnership() external;
     function transferOwnership(address newOwner) external;
+    function getMarketplace() external view returns (address);
+    function setMarketplace(address _marketplace) external returns (bool);
     function rateProvider(
         uint256 marketplaceId,
         uint256 dealId,
