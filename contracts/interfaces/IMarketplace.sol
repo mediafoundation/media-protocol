@@ -2,19 +2,23 @@
 pragma solidity >=0.8.17;
 
 interface IMarketplace {
+    error AccessControlBadConfirmation();
+    error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
+    error AddressEmptyCode(address target);
+    error AddressInsufficientBalance(address account);
+    error FailedInnerCall();
+    error ReentrancyGuardReentrantCall();
+    error SafeERC20FailedOperation(address token);
     event AddedBalance(
         uint256 _marketplaceId,
         uint256 _dealId,
         uint256 _amount
     );
-    event AddressAuthorized(address _addr);
-    event AddressDeauthorized(address _addr);
     event BillingStartExtended(
         uint256 marketplaceId,
         uint256 dealId,
         uint256 _extension
     );
-    event ClientUpdated(uint256 _marketplaceId, address _client);
     event DealAccepted(
         uint256 _marketplaceId,
         uint256 _dealId,
@@ -44,14 +48,9 @@ interface IMarketplace {
         uint256 _dealId,
         uint256 _clientRefund
     );
-    event MarketplaceInitialized(uint256 _marketplaceId);
     event OfferCreated(uint256 _marketplaceId, uint256 _offerId);
     event OfferDeleted(uint256 _marketplaceId, uint256 _offerId);
     event OfferUpdated(uint256 _marketplaceId, uint256 _offerId);
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
     event ProviderRegistered(uint256 _marketplaceId, address _provider);
     event ProviderStakeDecreased(
         uint256 _marketplaceId,
@@ -68,50 +67,42 @@ interface IMarketplace {
     );
     event ProviderUnregistered(uint256 _marketplaceId, address _provider);
     event ProviderUpdated(uint256 _marketplaceId, address _provider);
-    function REQUIRED_STAKE(uint256) external view returns (uint256);
-    function authorizedAddresses(uint256) external view returns (address);
-    function authorizedProxies(address) external view returns (bool);
+    event RoleAdminChanged(
+        bytes32 indexed role,
+        bytes32 indexed previousAdminRole,
+        bytes32 indexed newAdminRole
+    );
+    event RoleGranted(
+        bytes32 indexed role,
+        address indexed account,
+        address indexed sender
+    );
+    event RoleRevoked(
+        bytes32 indexed role,
+        address indexed account,
+        address indexed sender
+    );
+    function DEFAULT_ADMIN_ROLE() external view returns (bytes32);
     function dealAutoIncrement(uint256) external view returns (uint256);
-    function marketFeeRate(uint256) external view returns (uint256);
-    function marketFeeTo(uint256) external view returns (address);
-    function marketplacesCounter() external view returns (uint256);
+    function getRoleAdmin(bytes32 role) external view returns (bytes32);
+    function grantRole(bytes32 role, address account) external;
+    function hasRole(
+        bytes32 role,
+        address account
+    ) external view returns (bool);
     function offerAutoIncrement(uint256) external view returns (uint256);
     function offerCounter(uint256) external view returns (uint256);
-    function owner() external view returns (address);
-    function owners(uint256) external view returns (address);
-    function positionManager() external view returns (address);
-    function protocolFeeRate() external view returns (uint256);
-    function protocolFeeTo() external view returns (address);
-    function recoverNative() external returns (bool);
-    function renounceOwnership() external;
-    function transferOwnership(address newOwner) external;
     function onERC721Received(
         address,
         address,
         uint256,
         bytes memory
     ) external pure returns (bytes4);
-    function initializeMarketplace(
-        uint256 requiredStake,
-        address _marketFeeTo,
-        uint256 _marketFeeRate
-    ) external returns (uint256 marketplaceId);
-    function setRequiredStake(
-        uint256 marketplaceId,
-        uint256 stake
-    ) external returns (bool);
-    function transferMarketplaceOwnership(
-        uint256 marketplaceId,
-        address newOwner
-    ) external returns (bool);
-    function setMarketFeeRate(
-        uint256 marketplaceId,
-        uint256 feeRate
-    ) external returns (bool);
-    function setMarketFeeTo(
-        uint256 marketplaceId,
-        address feeTo
-    ) external returns (bool);
+    function recoverNative() external returns (bool);
+    function renounceRole(bytes32 role, address callerConfirmation) external;
+    function revokeRole(bytes32 role, address account) external;
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+    receive() external payable;
     function registerProvider(
         uint256 marketplaceId,
         string memory metadata,
@@ -171,10 +162,6 @@ interface IMarketplace {
         uint256 marketplaceId,
         uint256 dealId
     ) external returns (bool);
-    function updateClient(
-        uint256 marketplaceId,
-        string memory metadata
-    ) external returns (bool);
     function createDeal(
         uint256 marketplaceId,
         uint256 resourceId,
@@ -212,12 +199,11 @@ interface IMarketplace {
         uint256 dealId,
         uint256 extension
     ) external returns (bool);
-    function authorizeProxy(address _addr) external returns (bool);
-    function deAuthorizeProxy(address _addr) external returns (bool);
-    function setToken(address _tokenAddress) external returns (bool);
-    function setProtocolFeeTo(address feeTo) external returns (bool);
-    function setProtocolFeeRate(uint256 feeRate) external returns (bool);
-    function recoverTokens(address _token) external returns (bool);
+    function recoverERC721(
+        address _token,
+        uint256 _tokenId
+    ) external returns (bool);
+    function recoverERC20(address _token) external returns (bool);
     function hasActiveDeals(
         uint256 marketplaceId,
         uint256 offerId
@@ -230,10 +216,6 @@ interface IMarketplace {
         uint256 marketplaceId,
         address provider
     ) external view returns (Marketplace.Provider memory);
-    function getClient(
-        uint256 marketplaceId,
-        address client
-    ) external view returns (string memory);
     function getOffer(
         uint256 marketplaceId,
         uint256 offerId

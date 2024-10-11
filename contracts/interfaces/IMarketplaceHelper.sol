@@ -2,28 +2,53 @@
 pragma solidity >=0.8.17;
 
 interface IMarketplaceHelper {
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
+    error AccessControlBadConfirmation();
+    error AccessControlUnauthorizedAccount(address account, bytes32 neededRole);
+    error AddressEmptyCode(address target);
+    error AddressInsufficientBalance(address account);
+    error FailedInnerCall();
+    error ReentrancyGuardReentrantCall();
+    error SafeERC20FailedOperation(address token);
+    event RoleAdminChanged(
+        bytes32 indexed role,
+        bytes32 indexed previousAdminRole,
+        bytes32 indexed newAdminRole
     );
+    event RoleGranted(
+        bytes32 indexed role,
+        address indexed account,
+        address indexed sender
+    );
+    event RoleRevoked(
+        bytes32 indexed role,
+        address indexed account,
+        address indexed sender
+    );
+    function DEFAULT_ADMIN_ROLE() external view returns (bytes32);
     function feeAmountTickSpacing(uint24) external view returns (int24);
+    function getRoleAdmin(bytes32 role) external view returns (bytes32);
+    function grantRole(bytes32 role, address account) external;
+    function hasRole(
+        bytes32 role,
+        address account
+    ) external view returns (bool);
     function marketplace() external view returns (address);
     function mediaToken() external view returns (address);
-    function owner() external view returns (address);
-    function positionManager() external view returns (address);
-    function recoverNative() external returns (bool);
-    function renounceOwnership() external;
-    function router() external view returns (address);
-    function transferOwnership(address newOwner) external;
-    function weth() external view returns (address);
-    function wethToken() external view returns (address);
     function onERC721Received(
         address,
         address,
         uint256,
         bytes memory
     ) external pure returns (bytes4);
-    function recoverTokens(address _token) external returns (bool);
+    function positionManager() external view returns (address);
+    function recoverNative() external returns (bool);
+    function renounceRole(bytes32 role, address callerConfirmation) external;
+    function revokeRole(bytes32 role, address account) external;
+    function router() external view returns (address);
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+    function weth() external view returns (address);
+    function wethToken() external view returns (address);
+    receive() external payable;
     function tickSpacingToMaxTick(
         int24 tickSpacing
     ) external pure returns (int24 maxTick);
@@ -173,4 +198,19 @@ interface IMarketplaceHelper {
         uint256 minMediaAmountOut,
         bytes memory path
     ) external payable returns (uint256 mediaAmount);
+    function createOffers(
+        uint256 marketplaceId,
+        uint256[] memory maximumDealsArray,
+        bool[] memory autoAcceptArray,
+        uint256[] memory pricePerSecondArray,
+        uint256[] memory minDealDurationArray,
+        bool[] memory billFullPeriodsArray,
+        bool[] memory singlePeriodOnlyArray,
+        string[] memory metadataArray
+    ) external;
+    function recoverERC721(
+        address _token,
+        uint256 _tokenId
+    ) external returns (bool);
+    function recoverERC20(address _token) external returns (bool);
 }

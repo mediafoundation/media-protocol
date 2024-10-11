@@ -17,19 +17,19 @@ The interfaces can be imported into your Solidity projects to interact with the 
 ```solidity
 pragma solidity ^0.8.17;
 
-import "./media-protocol/contracts/interfaces/IMarketplace.sol";
+import "./media-protocol/contracts/interfaces/IMarketplaceStorage.sol";
 
 contract SimpleInitializeMarketplace {
-    IMarketplace marketplace;
+    IMarketplaceStorage marketplaceStorage;
     constructor(address _marketplaceAddress) {
-        marketplace = IMarketplace(_marketplaceAddress);
+        marketplaceStorage = IMarketplaceStorage(_marketplaceStorageAddress);
     }
 
     function initializeMarketplace() external returns (uint marketplaceId) {
-        marketplaceId = marketplace.initializeMarketplace(
+        marketplaceId = marketplaceStorage.initializeMarketplace(
             5000000000000000000, 
             msg.sender, 
-            3
+            30000 // 3% fee
         );
     }
 }
