@@ -60,7 +60,7 @@ interface IMarketplaceHelper {
         uint256 marketplaceId,
         string memory metadata,
         string memory publicKey,
-        uint256 minMediaAmountOut,
+        uint256[] memory minOut,
         bytes memory path,
         uint256 slippage,
         uint24 poolFee
