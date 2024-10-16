@@ -9,6 +9,7 @@ interface IMarketplaceHelper {
     error FailedInnerCall();
     error ReentrancyGuardReentrantCall();
     error SafeERC20FailedOperation(address token);
+    event OffersCreated(uint256 marketplaceId, uint256[] offerIds);
     event RoleAdminChanged(
         bytes32 indexed role,
         bytes32 indexed previousAdminRole,
@@ -207,7 +208,7 @@ interface IMarketplaceHelper {
         bool[] memory billFullPeriodsArray,
         bool[] memory singlePeriodOnlyArray,
         string[] memory metadataArray
-    ) external;
+    ) external returns (uint256[] memory);
     function recoverERC721(
         address _token,
         uint256 _tokenId
